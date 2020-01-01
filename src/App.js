@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
 import { HashRouter, Switch, Route } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,6 +16,28 @@ export default function App() {
     // useContext() to get access to global props/methods
     const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
     const isAuthenticatedStatus = isAuthenticated ? "Authenticated" : "Not Authenticated";
+
+    const [show, setShow] = useState(false);
+    const [modalMessage, setModalMessage] = useState("My custom modal message");
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    useEffect(() => {
+        console.log("useEffect: Beginning");
+        console.log("window", window.location);
+        if (window.location.search.includes("error")) {
+            console.error("Whoa, you got this error:", window.location.search);
+            const urlParams = new URLSearchParams(window.location.search);
+            let error_description = urlParams.get("error_description");
+            const keys = urlParams.keys();
+            for (const key of keys) {
+                console.log(`   key:${key}, value:${urlParams.get(key)}`);
+            }
+            setModalMessage(error_description);
+            setShow(true);
+            console.log("Checking location");
+        }
+    }, []);
 
     // Use custom hook, essentially grabs the "loading" via useContext()
     // loading=true means that we are still waiting to get our authentication state from Auth0
@@ -48,6 +73,21 @@ export default function App() {
                     </Switch>
                 </div>
             </HashRouter>
+            <Button variant="primary" onClick={handleShow}>
+                Launch demo modal
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Error from Login</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{modalMessage} </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="primary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
