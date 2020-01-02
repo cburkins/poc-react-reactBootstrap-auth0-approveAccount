@@ -6,17 +6,17 @@ I essentially followed this suggestion\: https://community.auth0.com/t/how-to-pr
 
 I built this POC using:
 
--   React
--   Bootstrap (via react-bootstrap, not reactstrap)
--   Auth0 (via @auth0/auth0-spa-js)
+- React
+- Bootstrap (via react-bootstrap, not reactstrap)
+- Auth0 (via @auth0/auth0-spa-js)
 
 To start, I copied this repo: https://github.com/cburkins/poc-react-reactBootstrap-auth0
 
 From there, did the following:
 
--   Added popup bootstrap modal to share error message from Auth0 (e.g. "Your registration must be approved by an administrator")
--   Added "useEffect()" to sense the error within the callback URL params
--   Added 2nd "useEffect()" that waits for the modal to be dismissed, waits for Auth0 lib to be loaded, then forces a logout (so the user doesn't use cached cookie for next login attempt)
+- Added popup bootstrap modal to share error message from Auth0 (e.g. "Your registration must be approved by an administrator")
+- Added "useEffect()" to sense the error within the callback URL params
+- Added 2nd "useEffect()" that waits for the modal to be dismissed, waits for Auth0 lib to be loaded, then forces a logout (so the user doesn't use cached cookie for next login attempt)
 
 ![image](https://user-images.githubusercontent.com/9342308/71648873-e0d70480-2cd7-11ea-8295-0f0ad4c3d711.png)
 
@@ -29,12 +29,12 @@ From there, did the following:
 
 ##### Create Auth0 rule to allow only Approved Users
 
--   Go to Auth0 Portal
--   navigate to "Rules"
--   Click on "Create Rule"
--   Click on "Empty Rule"
--   Name: Allow only approved users
--   Script: (see below)
+- Go to Auth0 Portal
+- navigate to "Rules"
+- Click on "Create Rule"
+- Click on "Empty Rule"
+- Name: Allow only approved users
+- Script: (see below)
 
 ```javascript
 function (user, context, callback) {
@@ -49,15 +49,15 @@ function (user, context, callback) {
 
 ##### Manually approve an Auth0 user
 
--   Go to Auth0 Portal
--   navigate to user&roles->users
--   On correct user, selecte menu (three dots) and "Details"
--   Within <b>app_metatdata</b> (not user_metadata)
+- Go to Auth0 Portal
+- navigate to user&roles->users
+- On correct user, selecte menu (three dots) and "Details"
+- Within <b>app_metatdata</b> (not user_metadata)
 
 ("false" or blank or mis-spelled will result in user denial)
 
 ```json
 {
-    "approved": true
+  "approved": true
 }
 ```
