@@ -26,7 +26,13 @@ export default function App() {
     // Essentially a "side effect" sort of like componentDidMount, componentDidUpdate, and componentWillUnmount combined
     // 2nd arg (array) is empty, so this fn is called every time it's re-rendered
     useEffect(() => {
+        console.log("useEffect()");
+        // setForceLogout(true);
+
         const urlParams = new URLSearchParams(window.location.search);
+        console.log("urlParams:", urlParams);
+
+        // Check if we got "error" within query params
         if (urlParams.get("error")) {
             console.error("Error from Auth0");
             console.log(`All URL Query Params: ${window.location.search}`);
@@ -63,7 +69,7 @@ export default function App() {
     // Use custom hook, essentially grabs the "loading" via useContext()
     // loading=true means that we are still waiting to get our authentication state from Auth0
     if (loading) {
-        return <div>Loading...</div>;
+        return <div>Loading... (likely waiting for Auth0 to respond)</div>;
     }
 
     return (
@@ -82,7 +88,7 @@ export default function App() {
                         <Nav>Status: {isAuthenticatedStatus}</Nav>
                         <Nav className="ml-3">
                             {!isAuthenticated && <button onClick={() => loginWithRedirect({})}>Log in</button>}
-                            {isAuthenticated && <button onClick={() => logout()}>Log out</button>}
+                            <button onClick={() => logout()}>Log out</button>
                         </Nav>
                     </Navbar>
                     {/* A <Switch> looks through its children <Route>s and renders first that matches current URL. */}
