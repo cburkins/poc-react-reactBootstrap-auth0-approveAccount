@@ -41,22 +41,32 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
     const [loading, setLoading] = useState(true);
 
     //   -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-    // React Hook, useEffect() runs after first render, and after every re-render (DOM update)
+    // Create React Effect Hook, first argument is Effect function, second argument is optional
+    // 2nd arg: omitted means effect runs on every render
+    //          empty array means effect runs only on first render
+    //          array of "dependencies", means that affect will ONLY run when one of dependencies changes
+    // Within index.js, we're wrapping our entire <App> with this Auth0Provider() function
     // Essentially a "side effect" sort of like componentDidMount, componentDidUpdate, and componentWillUnmount combined
-    // 2nd arg (array) is empty, so this fn is called every time it's re-rendered
     useEffect(() => {
         const initAuth0 = async () => {
-            console.log("calling createAuth0Client()");
+            console.warn("Started Auth0Provider useEffect()");
+            // Auth0 directions say you should only create one instance of the client
+            // Somewhat confusing since our SPA gets created, then passes to Auth0 for authentication, then browser comes back to "us"
+            // So during authentication, we actually call this twice
             const auth0FromHook = await createAuth0Client(initOptions);
-            console.log("calling setAuth0()");
+            // Use React State Hook to remember our Auth0 client in our "state" using variable auth0Client
             setAuth0(auth0FromHook);
 
-            // If we just returned from Auth0, then URL will contain "code=" query param
+            // Two use cases to consider:
+            // (1): Initial SPA load when user navigates to our app
+            // (2): Browser(and user) got sent over to Auth0 for authentication, and we've now returned back from there
+            //      If we just returned from Auth0, then URL will contain "code=" query param
             if (window.location.search.includes("code=")) {
-                console.log('Received "code" within response URL');
+                console.log('Received "code" within response URL, so must be returning from Auth0 authentication');
 
-                // If we happened to call loginWithRedirect() with {appstate: <something>}, we'll receive it back here
-                // handleRedirectCallback() makes a call to /oath/token to exchance/send our code for an oauth token
+                // To get over to Auth0 for authentication, we likely called useAuth0().loginWithRedirect()
+                //    If we called loginWithRedirect() with {appstate: <something>}, we'll see it reflected back to us here
+                // I read through Auth0's code, and handleRedirectCallback() makes a call to /oath/token to exchance/send our code for an oauth token
                 // This usually happens quickly with no user interaction
                 console.log("About to call auth0FromHook.handleRedirectCallback(), which just calls /oauth/token");
                 try {
@@ -71,7 +81,9 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
                 }
             }
 
+            // Determine if we're currently authenticated
             const isAuthenticated = await auth0FromHook.isAuthenticated();
+            // Use React State Hoook to remember if we're currently authenticated
             setIsAuthenticated(isAuthenticated);
 
             if (isAuthenticated) {
@@ -85,6 +97,7 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
         initAuth0();
         // eslint-disable-next-line
     }, []);
+    // end of useEffect() within Auth0Provider()
 
     //   -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
     // This is the return for the Auth0Provider component definition (Auth0Provider component is used in index.js)
