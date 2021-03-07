@@ -58,8 +58,21 @@ From there, did the following:
 1. Go to Auth0 Portal
 1. Click on "Auth Pipeline->Rules"
 1. Click on "Create Rule", then "Force email verification"
-1. Confirm that Login/Logout fails and displays error Modal
-1. Check your email address to approve email
+
+    NOTE: This is pre-configured rule from Auth0, but for reference, it looks like this:
+
+    ```javascript
+    function (user, context, callback) {
+      if (!user.email_verified) {
+        return callback(new UnauthorizedError('Please verify your email before logging in.'));
+      } else {
+        return callback(null, user, context);
+      }
+    }
+    ```
+
+1. Confirm that Login/Logout fails and displays error Modal now (assuming your email address is **unverified**)
+1. Check your email address to approve email address
 1. Confirm that Login/Lougout works now
 
 ### Deployment Step 3 (Only Approved Users)
