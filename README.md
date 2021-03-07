@@ -32,20 +32,27 @@ From there, did the following:
 
 ### Deployment Step 1 (Basic User Creation & Login/Logout)
 
+1. Clone this repo
+1. Install all dependencies via `npm install`
 1. Create Auth0 application (via their portal)
-    - "Allowed Callback URLs", add "http://localhost:3000"
-    - "Allowed Logout URLs", add "http://localhost:3000"
-    - "Allowed Web Origins", add "http://localhost:3000"
-1. Copy "client_id" and "domain" into `auth_config.json`
+    - `Name:` can be anything you'd like, just a convenience thing
+    - Application Type should be "Single Page Web Application"
+    - `Allowed Callback URLs`, add `http://localhost:3000`
+    - `Allowed Logout URLs`, add `http://localhost:3000`
+    - `Allowed Web Origins`, add `http://localhost:3000`
+1. Create a file called
+1. Copy "client_id" and "domain" into `src/auth_config.json`, should look like this:
+    ```
+    {
+        "domain": "dev-8snzgxfi.auth0.com",
+        "clientId": "5XF0vALgtkN6t1Z3KJTChqyaCQiQ94Tm"
+    }
+    ```
 1. Start app locally on port 3000 via `npm start`
 1. Click "Login" and create new user
-1. Receive 401/Unauthorized error (check browser dev console)
-1. Weirdly cycle through Application types
-    - In Portal, set "Application Type:" to "Regular Web Application"
-    - set "Token Endpoint Authentication Method:" to "None"
-    - Confirm modal "... will disable the Client Credentials grant for.."
 1. Click "Login" and confirm success (ie.g. "Status: Authenticated" in app header)
 1. Optional: set "Application Type:" to "Single Page Application" which removes the option of using grant type of "Passwordless OTP"
+
 ### Deployment Step 2 (Only verified email addresses)
 
 1. Go to Auth0 Portal
@@ -85,11 +92,15 @@ From there, did the following:
         ```
 1. Verify that Login/Logout works again
 
-### Appendix: Troubleshooting 401/Unauthorized in Authorization Code grant
+### Appendix: Troubleshooting 401/Unauthorized in Authorization Code grant (Defect)
 
-NOTE: User login works fine, receiving "code" from login works fine, the problem is when you try to send in your "code" /oath/token to receive a "token" in return. For some strange reason, you get a 401/Unauthorized
+NOTE: This was an Auth0 defect that I discovered in June 2020, and was fixed in Oct 2020, and therefore is **no longer relevant** (removed from directions above)
+
+Defect Description: User login works fine, receiving "code" from login works fine, the problem is when you try to send in your "code" to /oath/token to receive a "token" in return. For some strange reason, you get a 401/Unauthorized
 
 #### `The Short Version`
+
+This was the shortest way to work around the bug I discovered in Auth0's configuration, which I reported here: https://community.auth0.com/t/401-unauthorized-when-obtaining-token-in-authorization-code-grant/44685/2
 
 1. Create new Auth0 tenant (which creates "Default App")
 1. Within default app, fill in "http://localhost:3000" to the following:
@@ -101,7 +112,7 @@ NOTE: User login works fine, receiving "code" from login works fine, the problem
 
 #### `The Original Journey of Discovery`
 
-This is superflous, simply documentation of the original journey I took to discover the correct way to configure my Auth0 Application for SPA using PKCE.   
+This was the long version for working around the same defect as above. This is superflous, simply documentation of the original journey I took to discover the correct way to configure my Auth0 Application for SPA using PKCE.
 
 1.  Create new Auth0 tenant (which creates "Default App")
 1.  Within default app, fill in "http://localhost:3000" to the following:
