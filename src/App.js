@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 import { HashRouter, Switch, Route } from "react-router-dom";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
+// import Nav from "react-bootstrap/Nav";
+// import Navbar from "react-bootstrap/Navbar";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import NavBarFn from "./NavBarFn";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -13,8 +14,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useAuth0 } from "./react-auth0-spa";
 
 export default function App() {
-    // useContext() to get access to global props/methods
-    const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
+    // Calls useContext() to get access to global props/methods related to our Authentication capability
+    // Then use object destructuring to select item I need from the provided context
+    const { logout, loading } = useAuth0();
 
     const [modalShow, setModalShow] = useState(false);
     const [modalMessage, setModalMessage] = useState("Modal Message Placeholder");
@@ -75,21 +77,7 @@ export default function App() {
         <div className="App">
             <HashRouter>
                 <div>
-                    <Navbar bg="light">
-                        {/* 1st Nav item, mr-auto pushes the 2nd Nav item to the right */}
-                        {/* prettier-ignore */}
-                        <Nav className="mr-auto">
-                            <Nav.Item><Nav.Link as={Link} to="/">Home</Nav.Link></Nav.Item>
-                            <Nav.Item><Nav.Link as={Link} to="/page1">Page1 (Unprotected)</Nav.Link></Nav.Item>
-                            <Nav.Item><Nav.Link as={Link} to="/page2">Page2 (Protected Content)</Nav.Link></Nav.Item>
-                        </Nav>
-                        {/* 2nd Nav item, gets pushed to right because of mr-auto on first item */}
-                        <Nav>Status: {isAuthenticated ? "Authenticated" : "Not Authenticated"}</Nav>
-                        <Nav className="ml-3">
-                            {!isAuthenticated && <button onClick={() => loginWithRedirect({})}>Log in</button>}
-                            <button onClick={() => logout()}>Log out</button>
-                        </Nav>
-                    </Navbar>
+                    <NavBarFn />
                     {/* A <Switch> looks through its children <Route>s and renders first that matches current URL. */}
                     <Switch>
                         <Route path="/page1" component={Page1} />

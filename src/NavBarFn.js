@@ -9,10 +9,8 @@ import { useAuth0 } from "./react-auth0-spa";
 
 const NavBarFn = () => {
     // Calls useContext() to get access to global props/methods related to our Authentication capability
-    // Am I using object destructuring here ?
-    let chadContext = useAuth0();
-    console.warn("chadContext:", chadContext);
-    const { isAuthenticated, loginWithRedirect, logout } = chadContext;
+    // Then use object destructuring to select item I need from the provided context
+    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
     return (
         <Navbar bg="light">
