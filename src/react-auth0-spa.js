@@ -19,7 +19,7 @@ const DEFAULT_REDIRECT_CALLBACK = () => {
 // ---------------------------------------------------------------------------------
 
 // Exported function
-// We're essentially creating/exporting a "custom hook"
+// We're creating/exporting a React "custom hook"
 // Creates Auth0Context.Consumer() and Auth0Context.Provider() functions
 // For Class components, you'd wrap a child component in .Conumser() to get access to these props
 // For Functional components, you can use the useContext() function
@@ -55,8 +55,9 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
             if (window.location.search.includes("code=")) {
                 console.log('Received "code" within response URL');
 
-                // If we happened to call loginWithRedirect() with {appstate: <something>}, we'll received it back here
+                // If we happened to call loginWithRedirect() with {appstate: <something>}, we'll receive it back here
                 // handleRedirectCallback() makes a call to /oath/token to exchance/send our code for an oauth token
+                // This usually happens quickly with no user interaction
                 console.log("About to call auth0FromHook.handleRedirectCallback(), which just calls /oauth/token");
                 try {
                     const { appState } = await auth0FromHook.handleRedirectCallback();
@@ -80,6 +81,7 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
 
             setLoading(false);
         };
+        console.log("Calling initAuth0()");
         initAuth0();
         // eslint-disable-next-line
     }, []);
@@ -97,7 +99,8 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
                 getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
                 getTokenWithPopup: (...p) => auth0Client.getTokenWithPopup(...p),
                 logout: (...p) => auth0Client.logout(...p),
-            }}>
+            }}
+        >
             {children}
         </Auth0Context.Provider>
     );

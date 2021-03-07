@@ -15,7 +15,6 @@ import { useAuth0 } from "./react-auth0-spa";
 export default function App() {
     // useContext() to get access to global props/methods
     const { isAuthenticated, loginWithRedirect, logout, loading } = useAuth0();
-    const isAuthenticatedStatus = isAuthenticated ? "Authenticated" : "Not Authenticated";
 
     const [modalShow, setModalShow] = useState(false);
     const [modalMessage, setModalMessage] = useState("Modal Message Placeholder");
@@ -81,11 +80,11 @@ export default function App() {
                         {/* prettier-ignore */}
                         <Nav className="mr-auto">
                             <Nav.Item><Nav.Link as={Link} to="/">Home</Nav.Link></Nav.Item>
-                            <Nav.Item><Nav.Link as={Link} to="/about">About</Nav.Link></Nav.Item>
-                            <Nav.Item><Nav.Link as={Link} to="/users">Users</Nav.Link></Nav.Item>
+                            <Nav.Item><Nav.Link as={Link} to="/page1">Page1 (Unprotected)</Nav.Link></Nav.Item>
+                            <Nav.Item><Nav.Link as={Link} to="/page2">Page2 (Protected Content)</Nav.Link></Nav.Item>
                         </Nav>
                         {/* 2nd Nav item, gets pushed to right because of mr-auto on first item */}
-                        <Nav>Status: {isAuthenticatedStatus}</Nav>
+                        <Nav>Status: {isAuthenticated ? "Authenticated" : "Not Authenticated"}</Nav>
                         <Nav className="ml-3">
                             {!isAuthenticated && <button onClick={() => loginWithRedirect({})}>Log in</button>}
                             <button onClick={() => logout()}>Log out</button>
@@ -93,8 +92,8 @@ export default function App() {
                     </Navbar>
                     {/* A <Switch> looks through its children <Route>s and renders first that matches current URL. */}
                     <Switch>
-                        <Route path="/about" component={About} />
-                        <Route path="/users" component={Users} />
+                        <Route path="/page1" component={Page1} />
+                        <Route path="/page2" component={Page2} />
                         <Route path="/" component={Home} />
                     </Switch>
                 </div>
@@ -105,6 +104,7 @@ export default function App() {
         </div>
     );
 }
+// ------------------------------------------------------------------------------------------------
 
 function ModalFn({ message, title, ...restOfProps }) {
     // By default, "props" object is passed in, and we destructure to extract "message" and "title" properties
@@ -122,15 +122,33 @@ function ModalFn({ message, title, ...restOfProps }) {
         </Modal>
     );
 }
-
+// ------------------------------------------------------------------------------------------------
+// React function component
 function Home() {
-    return <h2>Home</h2>;
+    const { isAuthenticated } = useAuth0();
+    return (
+        <div style={{ margin: "20px" }}>
+            <h2 style={{ color: "blue" }}>Home Page</h2>
+            {isAuthenticated ? <div>You are authenticed</div> : <div>You are NOT authenticated</div>}
+        </div>
+    );
 }
-
-function About() {
-    return <h2>About</h2>;
+// ------------------------------------------------------------------------------------------------
+// React function component
+function Page1() {
+    return <h2 style={{ color: "blue", margin: "20px" }}>Page1</h2>;
 }
-
-function Users() {
-    return <h2>Users</h2>;
+// ------------------------------------------------------------------------------------------------
+// React function component
+function Page2() {
+    return (
+        <div style={{ margin: "20px" }}>
+            <h2 style={{ color: "blue" }}>Page2</h2>
+            <h2>More content</h2>
+        </div>
+    );
 }
+// ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
