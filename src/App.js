@@ -10,14 +10,17 @@ import NavBarFn from "./NavBarFn";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-// Custom Hook
-import { useAuth0 } from "./react-auth0-spa";
+// React Custom Hook to get the Auth0 Context
+import { useContextAuth0 } from "./react-auth0-spa";
 
 export default function App() {
-    // Calls useContext() to get access to global props/methods related to our Authentication capability
+    // This custom hook calls useContext() to get access to global props/methods related to our Authentication capability
     // Then use object destructuring to select item I need from the provided context
-    const { logout, loading } = useAuth0();
+    const { logout, loading } = useContextAuth0();
 
+    // Create our "state" using React State Hook (i.e. "useState")
+    // This creates states variables inside a (otherwise stateless) React Functional Component
+    // React will remember these "state" value between renders
     const [modalShow, setModalShow] = useState(false);
     const [modalMessage, setModalMessage] = useState("Modal Message Placeholder");
     const [modalTitle, setModalTitle] = useState("Modal Title Placeholder");
@@ -113,7 +116,9 @@ function ModalFn({ message, title, ...restOfProps }) {
 // ------------------------------------------------------------------------------------------------
 // React function component
 function Home() {
-    const { isAuthenticated } = useAuth0();
+    // This custom hook calls useContext() to get access to global props/methods related to our Authentication capability
+    // Then use object destructuring to select item I need from the provided context
+    const { isAuthenticated } = useContextAuth0();
     return (
         <div style={{ margin: "20px" }}>
             <h2 style={{ color: "blue" }}>Home Page</h2>

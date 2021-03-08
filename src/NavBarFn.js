@@ -4,14 +4,17 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 
 // Custom Hook
-// When we call "useAuth0()" below, essentially calls useContext(Auth0Context)
-import { useAuth0 } from "./react-auth0-spa";
+// When we call "useContextAuth0()" below, essentially calls useContext(Auth0Context)
+import { useContextAuth0 } from "./react-auth0-spa";
 
 const NavBarFn = () => {
     // Calls useContext() to get access to global props/methods related to our Authentication capability
     // Then use object destructuring to select item I need from the provided context
-    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+    const { isAuthenticated, loginWithRedirect, logout } = useContextAuth0();
 
+    // Create Navbar at top of page with Navigation Links, Login Buton, Logout Button
+    // Login button calls auth0Client.loginWithRedirect()
+    // In reading over that code, it is essentially just calling window.location.assign(url)
     return (
         <Navbar bg="light">
             {/* 1st Nav item, mr-auto pushes the 2nd Nav item to the right */}
