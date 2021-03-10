@@ -42,7 +42,8 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
     const [loading, setLoading] = useState(true);
 
     //   -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
-    // Create React Effect Hook, first argument is Effect function, second argument is optional
+    // Create React Effect Hook, gets runs AFTER render function is complete
+    // first argument is Effect function, second argument is optional
     // 2nd arg: omitted means effect runs on every render
     //          empty array means effect runs only on first render (i.e. equivalent of componentDidMount)
     //          array of "dependencies", means that affect will ONLY run when one of dependencies changes
