@@ -54,8 +54,8 @@ export const Auth0Provider = ({ children, onRedirectCallback = DEFAULT_REDIRECT_
         const initAuth0 = async () => {
             console.warn("Started Auth0Provider useEffect()");
             // Auth0 directions say you should only create one instance of the client
-            // Somewhat confusing since our SPA gets created, then passes to Auth0 for authentication, then browser comes back to "us"
-            // So during authentication, we actually call this twice
+            // Somewhat confusing at first since our SPA gets created, then passes to Auth0 for authentication, then browser comes back to "us"
+            // So during authentication, we actually call this twice (but it's only once per session, so that's cool)
             const auth0ClientLocal = await createAuth0Client(initOptions);
             // Use React State Hook to remember our Auth0 client in our "state" using variable auth0Client
             setAuth0(auth0ClientLocal);
